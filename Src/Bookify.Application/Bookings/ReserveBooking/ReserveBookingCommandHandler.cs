@@ -7,7 +7,7 @@ using Bookify.Domain.Users;
 
 namespace Bookify.Application.Bookings.ReserveBooking;
 
-public sealed class BookingCommandHandler(
+public sealed class ReserveBookingCommandHandler(
     IUserRepository userRepository,
     IApartmentRepository apartmentRepository,
     IBookingRepository bookingRepository,
@@ -52,7 +52,7 @@ public sealed class BookingCommandHandler(
             _pricingService);
         _bookingRepository.Add(booking);
           
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
  
         return booking.Id;
     }
