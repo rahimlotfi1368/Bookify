@@ -1,6 +1,31 @@
 ﻿services:
   bookify.api:
-    image: bookify.api
+    image: ${DOCKER_REGISTRY-}bookifyapi
+    container_name: Bookify.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5046
+      - ASPNETCORE_HTTPS_PORTS=7087
+    ports:
+      - 5046:5046
+      - 7087:7087
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     build:
       context: .
-      dockerfile: Src/Bookify.Api/Dockerfile
+      dockerfile: src/Bookify.Api/Dockerfile
+    depends_on:
+      - bookify-db
+
+  bookify-db:
+    image: postgres:latest
+    container_name: Bookify.Db
+    environment:
+      - POSTGRES_DB=bookify
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=3cure
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
