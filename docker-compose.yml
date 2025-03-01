@@ -1,20 +1,26 @@
 ﻿services:
-  bookify.api:
+  bookify-api:
     image: ${DOCKER_REGISTRY-}bookifyapi
     container_name: Bookify.Api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=5046
-      - ASPNETCORE_HTTPS_PORTS=7087
+      - ASPNETCORE_HTTPS_PORT=7087
+      - ASPNETCORE_URLS=https://+:7087;http://+:5046
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=3cure
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ConnectionStrings__DefaultConnection=Host=localhost;Port=5433;Database=bookify;Username=postgres;Password=3cure
     ports:
       - 5046:5046
       - 7087:7087
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${HOME}/.aspnet/https:/https:ro
     build:
       context: .
       dockerfile: src/Bookify.Api/Dockerfile
+    networks:
+      - pgverse
     depends_on:
       - bookify-db
 
@@ -25,7 +31,19 @@
       - POSTGRES_DB=bookify
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=3cure
+      - POSTGRES_HOST_AUTH_METHOD=md5
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
       - 5433:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bookify"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pgverse
+
+networks:
+  pgverse:
+    driver: bridge
