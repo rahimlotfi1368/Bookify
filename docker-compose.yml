@@ -4,25 +4,28 @@
     container_name: Bookify.Api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORT=7087
       - ASPNETCORE_URLS=https://+:7087;http://+:5046
+      - ASPNETCORE_HTTPS_PORT=7087
       - ASPNETCORE_Kestrel__Certificates__Default__Password=3cure
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ConnectionStrings__DefaultConnection=Host=localhost;Port=5433;Database=bookify;Username=postgres;Password=3cure
+      - ConnectionStrings__DefaultConnection=Host=bookify-db;Port=5432;Database=bookify;Username=postgres;Password=3cure
     ports:
-      - 5046:5046
-      - 7087:7087
+      - 5046:5046  # HTTP
+      - 7087:7087  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-      - ${HOME}/.aspnet/https:/https:ro
+      - D:\MyProjects\RiderProjects\Bookify\Src\Bookify.Api:/app:rw
+      - D:\MyProjects\RiderProjects\Bookify:/src:rw
+      - C:\Users\Notebook\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+      - C:\Users\Notebook\.aspnet\https:/https:ro  # Corrected volume mapping
+      - C:\Users\Notebook\.nuget\packages:/home/app/.nuget/packages:rw
     build:
       context: .
       dockerfile: src/Bookify.Api/Dockerfile
     networks:
       - pgverse
     depends_on:
-      - bookify-db
+      bookify-db:
+        condition: service_healthy
 
   bookify-db:
     image: postgres:latest

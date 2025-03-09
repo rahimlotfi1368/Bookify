@@ -1,0 +1,19 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  bookify-api:
+    build:
+      context: "D:\\MyProjects\\RiderProjects\\Bookify"
+      dockerfile: "src/Bookify.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app-1/bin/Debug/net8.0/Bookify.Api.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "bookifyapi:dev"
+    ports: []
+    volumes:
+    - "D:\\MyProjects\\RiderProjects\\Bookify\\Src\\Bookify.Api:/app-1:rw"
+    - "D:\\MyProjects\\RiderProjects\\Bookify:/src-1:rw"
+    working_dir: "/app-1"
