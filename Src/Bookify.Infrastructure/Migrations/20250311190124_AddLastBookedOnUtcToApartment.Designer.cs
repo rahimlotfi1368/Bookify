@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookify.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250309191709_Create-DataBase")]
-    partial class CreateDataBase
+    [Migration("20250311190124_AddLastBookedOnUtcToApartment")]
+    partial class AddLastBookedOnUtcToApartment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace Bookify.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastBookOnUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_book_on_utc");
+                        .HasColumnName("last_booked_on_utc");
 
                     b.Property<string>("Name")
                         .IsRequired()

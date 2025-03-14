@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Bookify.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDataBase : Migration
+    public partial class AddLastBookedOnUtcToApartment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,7 +27,7 @@ namespace Bookify.Infrastructure.Migrations
                     price_currency = table.Column<string>(type: "text", nullable: false),
                     cleaning_fee_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     cleaning_fee_currency = table.Column<string>(type: "text", nullable: false),
-                    last_book_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_booked_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     amenities = table.Column<int[]>(type: "integer[]", nullable: false),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },

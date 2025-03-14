@@ -28,6 +28,8 @@ internal sealed class ApartmentConfiguration:IEntityTypeConfiguration<Apartment>
             priceBuilder.Property(money => money.Currency)
                 .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
         });
+        builder.Property(apartment => apartment.LastBookOnUtc)
+            .HasColumnName("last_booked_on_utc");
         builder.Property<uint>("Version").IsRowVersion();
     }
 }

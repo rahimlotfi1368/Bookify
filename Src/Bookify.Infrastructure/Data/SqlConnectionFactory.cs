@@ -8,11 +8,13 @@ internal sealed class SqlConnectionFactory(string connectionString) : ISqlConnec
 {
     #region Implementation of ISqlConnectionFactory
 
-    private readonly string _connectionString = connectionString;
+    private readonly string _connectionString = !string.IsNullOrEmpty(connectionString)
+        ? connectionString
+        : throw new ArgumentNullException(nameof(connectionString), "Connection string cannot be null or empty.");
 
     public IDbConnection CreateConnection()
     {
-        var connection = new NpgsqlConnection();
+        var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
         return connection;
     }
